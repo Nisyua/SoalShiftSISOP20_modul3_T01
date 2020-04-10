@@ -135,6 +135,10 @@ printf("B sudah jalan\n");
    return 0;
 ```
 
+## ScreenShot
+
+![](img/4a.jpg)
+
 ### 4b
 **Batu kedua adalah Amethyst.** Batu mulia berwarna ungu mengkilat. Teka-tekinya adalah: 
 Buatlah program C kedua dengan nama "4b.c". Program ini akan mengambil variabel hasil perkalian matriks dari program "4a.c" (program sebelumnya), dan tampilkan hasil matriks tersebut ke layar. 
@@ -246,6 +250,10 @@ int main() //melakukan deklarasi variabel
 }
 ```
 
+## ScreenShot
+
+![](img/4b.jpg)
+
 ### 4c
 ***Batu ketiga adalah Onyx.*** Batu mulia berwarna hitam mengkilat. Pecahkan teka-teki berikut! 
 1. Buatlah program C ketiga dengan nama "4c.c". Program ini tidak 
@@ -299,3 +307,7 @@ pid = fork();
 - Fungsi `dup2()` adalah untuk menduplikat file deskriptor yang terbuka ke deskriptor lain dengan melakukan `execv("/bin/ls", argv);`
 - `dup2(filedeskriptor[1], 1);` fungsi ini dibuat untuk meng-copy output, `close(filedeskriptor[1]);` kemudian melakukan close pada read(0) dan `close(filedeskriptor[1]);`juga melakukan close pada write(1). kemudian selanjutnya melakukan `execv("/bin/ls", argv);` untuk menampilkan hasil read pada direktori saat ini
 - Kemudian adak fungsi `dup2(filedeskriptor[0], 0);` yang berfungsi untuk mereplace input 0 dengan input dari pipes, kemudian melakukan close pada fungsi write dari pipes`   close(filedeskriptor[1]);`. Kemudian melakukan `execv("/usr/bin/wc", argv);`
+
+## ScreenShot
+
+![](img/4c.png)
