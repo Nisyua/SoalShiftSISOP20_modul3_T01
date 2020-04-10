@@ -257,7 +257,7 @@ memiliki hubungan terhadap program yang lalu.
 2. Program ini dibuat untuk mengetahui jumlah file yang ada pada suatu folder di direktori saat kita menjalankan soal nomor 4c ini dengan menggunakan command `ls | wc -1`
 3. Program nomor 4c ini dibuat harus menggunakan IPC Pipes
 
-***Source Code*** [Soal 4c] (https://github.com/anissaidatur/SoalShiftSISOP20_modul3_T01/blob/master/soal4/4c.c)
+***Source Code*** [Soal 4c](https://github.com/anissaidatur/SoalShiftSISOP20_modul3_T01/blob/master/soal4/4c.c)
 
 ### Library yang Digunakan :
 ```c
@@ -278,11 +278,9 @@ int main() {
 ```c
 pid = fork();
   if (pid == 0) {
-    dup2(filedeskriptor[1], 1);
+    dup2(filedeskriptor[1], 1); 
     close(filedeskriptor[0]);
     close(filedeskriptor[1]);
-    // close(fd[2]);
-    // close(fd[3]);
     char *argv[] = {"ls", NULL};
     execv("/bin/ls", argv);
   }
@@ -293,10 +291,11 @@ pid = fork();
     dup2(filedeskriptor[0], 0);
     close(filedeskriptor[0]);
     close(filedeskriptor[1]);
-    // close(fd[2]);
-    // close(fd[3]);
     char *argv[] = {"wc" ,"-l", NULL};
     execv("/usr/bin/wc", argv);
   }
 }
 ```
+- Fungsi `dup2()` adalah untuk menduplikat file deskriptor yang terbuka ke deskriptor lain dengan melakukan `execv("/bin/ls", argv);`
+- `dup2(filedeskriptor[1], 1);` fungsi ini dibuat untuk meng-copy output, `close(filedeskriptor[1]);` kemudian melakukan close pada read(0) dan `close(filedeskriptor[1]);`juga melakukan close pada write(1). kemudian selanjutnya melakukan `execv("/bin/ls", argv);` untuk menampilkan hasil read pada direktori saat ini
+- Kemudian adak fungsi `dup2(filedeskriptor[0], 0);` yang berfungsi untuk mereplace input 0 dengan input dari pipes, kemudian melakukan close pada fungsi write dari pipes`   close(filedeskriptor[1]);`. Kemudian melakukan `execv("/usr/bin/wc", argv);`
