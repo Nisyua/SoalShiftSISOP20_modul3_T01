@@ -144,13 +144,13 @@ Contoh: misal array [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], ...], maka:
 1 2 6 24 120 720 ... ... ... (Catatan! : Harus menggunakan Thread dalam penghitungan faktorial) 
  
 ### Penyelesaian Soal :
-1. Kita diminta untuk membuat program untuk menghitung nilai faktorial dari masing-masing isi matrix 4x5 dari hasil perkalian matrix nomor 4a.
-2. Sebelum melakukan perhitungan untuk menghitung nilai faktorial, kita harus memanggil hasil perkalian matrix yang didapatkan pada soal no 4a diatas dengan menggunakan shared memory dan menampilkan hasil perhitungan matrix dari nomor 4a ke layar dengan format matrix 4x5
-3. Selanjutnya, dalam melakukan perhitungan untuk mencari nilai faktorial kita harus menggunakan thread dalam perhitungan factorial
+1. Kita diminta untuk membuat program untuk menghitung nilai faktorial(dengan menggunakan penjumlahan) dari masing-masing isi matrix 4x5 dari hasil perkalian matrix nomor 4a.
+2. Sebelum melakukan perhitungan untuk menghitung nilai faktorial(dengan menggunakan penjumlahan), kita harus memanggil hasil perkalian matrix yang didapatkan pada soal no 4a diatas dengan menggunakan shared memory dan menampilkan hasil perhitungan matrix dari nomor 4a ke layar dengan format matrix 4x5
+3. Selanjutnya, dalam melakukan perhitungan untuk mencari nilai faktorial(dengan menggunakn penjumlahan) kita harus menggunakan thread dalam perhitungan faktorial(dengan menggunakan penjumlahan).
 
 ***Source Code*** [Soal 4b](https://github.com/anissaidatur/SoalShiftSISOP20_modul3_T01/blob/master/soal4/4b.c)
 
-**Library yang digunakan**
+**Library yang Digunakan**
 ```c
 #include <stdio.h>
 #include <string.h>
@@ -172,7 +172,7 @@ Contoh: misal array [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], ...], maka:
 - `#define digunakan` untuk mendefinisikan variabel menjadi variabel baru. tujuan mendefinisikan variabel ini agar dalam pembuatan program kita bisa lebih mudah untuk mengingat nama variabelnya. 
 - Selain itu `#define MAXIMUM` digunakan untuk mendefinisikan char dengan jumlah maximum  yaitu 100
 
-**Deklarasi variabel shared**
+**Deklarasi Variabel Shared**
 ```c
 struct shared{
     int status;
@@ -182,7 +182,7 @@ int row = 0;
 int col = 0;
 ```
 
-**Operasi untuk menghitung nilai faktorial**
+**Operasi untuk Menghitung Nilai Faktorial(dengan menggunakan penjumlahan)**
 ```c
 void* jumlah(void* arg) {
   int i = *((int*)arg);
@@ -205,14 +205,15 @@ void* jumlah(void* arg) {
 - ` if(col > 4){` `printf("\n");` `col= 0;` code ini menunjukkan jika colom yang sudah dihitung 4 dan jika sudah melebihi 4 maka akan diulang menjadi 0 lagi. Jadi tujuannya untuk membentuk matrix dengan ukuran 4x5, jika sudah berukuran 4 kolom maka hasil perhitungan faktorialnya selanjutnya akan di print di bawahnya yaitu dimulai dari print hasil ke-0.
 - `printf("%2d %6d ",i,total);` code ini digunakan untuk print hasil perhitungan faktorial matrix setelah semua proses selesai melakukan perhitungan 
 
-**Code "shared memory" yang digunakan untuk mengambil data hasil perhitungan matrix pada soal no 4a**
+**Code "Shared Memory" yang Digunakan untuk Mengambil Data Hasil Perhitungan Matrix pada Soal no 4a**
 ```c
-int main()
+int main() //melakukan deklarasi variabel
 {
      key_t          ShmKEY;
      int            ShmID;
      struct shared  *ShmPTR;
-
+    
+     //template shared memory
      ShmKEY = ftok("key",100);
      ShmID = shmget(ShmKEY,sizeof(struct shared),0666);
      if(ShmID < 0){
@@ -222,7 +223,8 @@ int main()
      ShmPTR = (struct shared*) shmat(ShmID, NULL, 0);
 
      while (ShmPTR->status != READY);
-
+      
+      //untuk menghitung faktorial penjumlahan dari matrix 4a
       pthread_t tid[20];
       for(int i = 0; i < 20;i++){
          int *x =  malloc(sizeof(*x));
