@@ -164,7 +164,7 @@ Contoh: misal array [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], ...], maka:
 ```
 
 ```c
-#define BELUM_READY -1
+#define BELUMREADY -1
 #define READY 0
 #define SIAP 1
 #define MAXIMUM 100
