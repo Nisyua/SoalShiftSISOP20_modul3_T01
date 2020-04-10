@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define BELUM_READY -1
+#define BELUMREADY -1
 #define READY 0
 #define SIAP 1
 #define MAXIMUM 100
