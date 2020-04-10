@@ -107,7 +107,7 @@ ShmKEY = ftok("key",100);
 
 **Memasukkan data yang ada di matriks ke dalam struct**
 ```c
-ShmPTR->status = UNREADY;
+ShmPTR->status = BELUMREADY;
 int j = 0;
 int k = 0;
 
@@ -121,8 +121,15 @@ for(int i = 0; i < 20; i++){
 }
 ```
 
+**Menunggu 4b menerima proses. Apabila telah diterima , maka proses selesai**
 ```c
  printf("Jalanin yang B \n");
    while (ShmPTR->status != SIAP)
        sleep(1);
+printf("B sudah jalan\n");
+   shmdt((void *) ShmPTR);
+   printf("Proses kelar\n");
+   shmctl(ShmID, IPC_RMID, NULL);
+   exit(0);
+   return 0;
 ```
