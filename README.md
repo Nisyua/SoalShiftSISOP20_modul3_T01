@@ -245,3 +245,58 @@ int main() //melakukan deklarasi variabel
     return 0;
 }
 ```
+
+### 4c
+***Batu ketiga adalah Onyx.*** Batu mulia berwarna hitam mengkilat. Pecahkan teka-teki berikut! 
+1. Buatlah program C ketiga dengan nama "4c.c". Program ini tidak 
+memiliki hubungan terhadap program yang lalu.
+2. Pada program ini, Norland diminta mengetahui jumlah file dan folder di direktori saat ini dengan command "ls | wc -l". Karena sudah belajar IPC, Norland mengerjakannya dengan semangat. (Catatan! : Harus menggunakan IPC Pipes) 
+
+### Penyelesaian Soal :
+1. Kita harus membuat program C baru karena program yang ketiga(4c) ini tidak memiliki hubungan dengan soal 4a dan 4b
+2. Program ini dibuat untuk mengetahui jumlah file yang ada pada suatu folder di direktori saat kita menjalankan soal nomor 4c ini dengan menggunakan command `ls | wc -1`
+3. Program nomor 4c ini dibuat harus menggunakan IPC Pipes
+
+***Source Code*** [Soal 4c] (https://github.com/anissaidatur/SoalShiftSISOP20_modul3_T01/blob/master/soal4/4c.c)
+
+### Library yang Digunakan :
+```c
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<string.h>
+#include<sys/wait.h>
+```
+### Mendeklarasikan Pipes
+```c
+int main() {
+  int filedeskriptor[2];
+```
+- ` int filedeskriptor[2];` harus dengan jumlah 2 karena pipes hanya memiliki 2 ujung yaitu ujung 1 dan 0.  1 untuk write sedangkan 0 untuk read.
+
+```c
+pid = fork();
+  if (pid == 0) {
+    dup2(filedeskriptor[1], 1);
+    close(filedeskriptor[0]);
+    close(filedeskriptor[1]);
+    // close(fd[2]);
+    // close(fd[3]);
+    char *argv[] = {"ls", NULL};
+    execv("/bin/ls", argv);
+  }
+  while(wait(NULL) > 0);
+
+  pid = fork();
+  if (pid == 0) {
+    dup2(filedeskriptor[0], 0);
+    close(filedeskriptor[0]);
+    close(filedeskriptor[1]);
+    // close(fd[2]);
+    // close(fd[3]);
+    char *argv[] = {"wc" ,"-l", NULL};
+    execv("/usr/bin/wc", argv);
+  }
+}
+```
