@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define BELUM_READY -1
+#define BELUMREADY -1
 #define READY 0
 #define SIAP 1
 #define MAXIMUM 100
@@ -87,7 +87,7 @@ int main() {
   }
   ShmPTR = (struct shared *) shmat(ShmID, NULL, 0);
 
-  ShmPTR->status = BELUM_READY;
+  ShmPTR->status = BELUMREADY;
   int j = 0;
   int k = 0;
 
@@ -103,12 +103,12 @@ int main() {
   }
    ShmPTR->status = READY;
 
-   printf("Jalanin yang B \n");
+  printf("Jalanin yang B \n");
    while (ShmPTR->status != SIAP)
        sleep(1);
-   printf("B udah jalan\n");
+   printf("B sudah jalan\n");
    shmdt((void *) ShmPTR);
-   printf("Dah share ke B\n");
+   printf("Proses kelar\n");
    shmctl(ShmID, IPC_RMID, NULL);
    exit(0);
    return 0;
