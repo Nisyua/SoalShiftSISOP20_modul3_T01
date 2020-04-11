@@ -6,11 +6,11 @@ Repository ini Sebagai Laporan Resmi Soal Shift Modul 2 Praktikum Sistem Operasi
 - Kadek Nesya Kurniadewi [05311840000009]
 
 ## Soal 2
-![](img/soal3.png)
-
-## Soal 3
 ![](img/soal2.png)
 ![](img/2lanjut.png)
+
+## Soal 3
+![](img/soal3.png)
 
 Solusi
 
