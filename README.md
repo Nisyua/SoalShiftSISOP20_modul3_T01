@@ -193,7 +193,7 @@ else if (strcmp(argv[1],"-d") == 0 && argc == 3) {
 Prosesnya sama seperti case 2, tetapi disini akan memindahkan seluruh file yang ada dalam suatu path ke working directory. Makan yang di cek adalah argv[2] pada opendir karena disitu berisi nama path yang diketikkan pada terminal.\
 
 ## Image
-
+![](img/-f.png)
 ![](img/3before.png)
 ![](img/3after.png)
 
