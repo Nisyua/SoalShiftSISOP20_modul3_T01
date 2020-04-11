@@ -196,8 +196,9 @@ Prosesnya sama seperti case 2, tetapi disini akan memindahkan seluruh file yang 
 ![](img/-f.png)
 ![](img/3before.png)
 ![](img/3after.png)
+
 ![](img/a\*terminal.png)
-![](img/\a*.png)
+![](img/a\*.png)
 
 ## Soal 4
 
