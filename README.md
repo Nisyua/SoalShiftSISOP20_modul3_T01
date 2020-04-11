@@ -5,6 +5,193 @@ Repository ini Sebagai Laporan Resmi Soal Shift Modul 2 Praktikum Sistem Operasi
 - Anis Saidatur Rochma [05311840000002] 
 - Kadek Nesya Kurniadewi [05311840000009]
 
+## Soal 3
+![](img/soal3.png)
+
+Solusi
+
+
+```c
+char cwd[100];
+pthread_t threads[100];
+pid_t child;
+char *split_file[4],*split_path[20],nmfile[100],path[100];
+int n = 0, m = 0;
+ ```
+ Pertama, deklarasikan variabel. 
+ 
+```c
+int main(int argc, char *argv[]) {
+    if(getcwd(cwd, sizeof(cwd)) != NULL) {
+        // printf("Current working dir: %s\n", cwd);
+    }
+    int i=0,k=0;
+	int p;
+    if (strcmp(argv[1],"-f") == 0) {
+        for(k = 2 ; k < argc ; k++ ){
+            int p;
+            pthread_create(&(threads[i]),NULL,move,argv[k]);
+            pthread_join(threads[i],NULL);
+            i++;
+        }
+    }
+
+```
+- Mula-mula dilakukan pemanggilan fungsi `getcwd(get current working directory)` untuk menyimpan path working directory sekarang, yang nantinya adalah string path tsb akan disimpan pada array `cwd`. Karena di soal meminta untuk semua case, hasil pemindahan file dan folder yang dibuat harus ada di working directory dimana program tersebut dijalankan. 
+Lalu untuk kasus pertama, saat argumen ke dua yang inputkan di terminal sama dengan `-f` maka akan dilakukan pengecekan. Jika benar, maka akan membuat threads sebanyak jumlah path yang diinputkan pada terminal, dan akan memanggil fungsi `move` untuk melakukan pengecekan dan pemindahan file serta membuat *directory*. Lalu jika 1 path telah selesai dilaksanakan maka akan melakukan proses join threads, dst nya
+
+```c
+void* move(void *arg) {
+    strcpy(path,arg);
+    char *temp,*temp1;
+
+	unsigned long i=0;
+	pthread_t id=pthread_self();
+	int iter;
+
+    temp1 = strtok(path, "/");
+    while( temp1 != NULL ) {
+        split_path[m] = temp1;
+        m++;
+        temp1 = strtok(NULL, "/");
+    }
+```
+fungsi `move` = path yang diketikkan pada terminal akan disimpan dalam variabel arg lalu akan dicopy ke array path. Kemudian akan dilakukan pemisahan string path dengan fungsi `strtok` dimana string path tsb dipisahkan dengan field separatornya adalah tanda "/". Hasil pemisahan tsb kemudian dismpan dalam array `split_path`.
+
+```c
+strcpy(nama_file,split_path[m-1]);
+
+    temp = strtok(split_path[m-1], ".");
+    while( temp != NULL ) {
+
+        split_file[n] = temp;
+        n++;
+        temp = strtok(NULL, ".");
+    }
+```
+`split_path[m-1]` akan berisi sebuah nama file beserta ekstensinya yang didaptkan dari `strtok("/")`. Setelah itu nama file yang ada di `split_path[m-1]` tsb akan di copy ke array `nama_file`. Nantinya akan dilakukan pemisahan lagi untuk mendapatkan ekstensi dari nama file tsb. Dilakukan pemisahan nama file berdasarkan tanda "." yang nantinya hasil pemisahan akan disimpan pada array `split_file`.
+
+```c
+char lowerall[100];
+    strcpy(lowerall,split_file[n-1]);
+    for(int i = 0; lowerall[i]; i++){
+        lowerall[i] = tolower(lowerall[i]);
+    }
+```
+Karena pada soal ekstensi yang diinputkan di terminal tidak case yang sensitive, maka semua huruf ekstensi akan di kecilkan dengan menggunakan fungsi  `tolower`. Dimana `split_file[n-1]` yang berisi nama ekstensi ini akan di copy dulu ke array lowerall, lalu dilakukan proses pengecilan semua huruf yang ada di dalam looping.
+
+```c
+DIR *folder, *folderopen;
+    struct dirent *entry;
+    char place2[100],place3[100];
+    folder = opendir(cwd);
+    int isdir = 0;
+    printf("n = %d\n",n);
+    if( n > 1 ){
+
+        if(folder == NULL)
+        {
+            printf("error\n");
+        }
+        while( (entry=readdir(folder)) )
+        {
+
+            if(strcmp(entry->d_name,lowerall) == 0 && entry->d_type == 4){
+                isdir = 1;
+                break;
+            }
+        }
+```
+Kodingan di atas akan melakukan pengecekan apakah directory sekarang (*current working directory*) ada isinya atau tidak. Hal itu dilakukan jika nilai n > 1 (artinya file tsb memiliki ekstensi). Jika cwd ada isinya, akan dilakukan sebuah persyaratan, jika nama file pada directory tsb dengan array lowerall sama dan return data entry->d_type = 4(artinya merupakan sebuah direktori), maka variabel isdir di set sama dengan 1 yang merupakan sebuah penanda.
+
+```c
+  if(isdir == 0){
+
+            strcpy(place2,cwd);
+            strcat(place2,"/");
+            strcat(place2,lowerall);
+            mkdir(place2, 0777);
+
+        }
+    }
+    else{
+        strcpy(place2,cwd);
+        strcat(place2,"/");
+        strcat(place2,"Unknown");
+        mkdir(place2, 0777);
+    }
+```
+variabel isdir tadi dilakukan pengecekan lagi untuk melaksanakan pembuatan folder. Jika isdir = 0 (artinya bukan sebuah directory, namun sebuah file) maka akan dibuat folder yang path tujuan folder dibuatnya ada di bagian place2. Llau jika bukan, artinya file tidak memiliki ekstensi dan akan dibuat folder "Unknown".
+
+```c
+else if (strcmp(argv[1],"-d") == 0 && argc == 3) {
+        i = 0;
+        DIR *fd, *fdo;
+        struct dirent *folder;
+        char pl1[100],pl2[100];
+
+        fd = opendir(argv[2]);
+        int isdir = 0;
+
+        if(fd == NULL)
+        {
+            printf("error\n");
+        }
+        while( (folder=readdir(fd)) )
+        {
+            if ( !strcmp(folder->d_name, ".") || !strcmp(folder->d_name, "..") )
+            continue;
+
+            int p;
+            strcpy(pl1,argv[2]);
+            strcat(pl1,"/");
+            strcat(pl1,folder->d_name);
+            //is regular file
+            if(folder->d_type == 8){
+            pthread_create(&(threads[i]),NULL,move,pl1);
+            pthread_join(threads[i],NULL);
+            i++;
+            }
+        }
+    }
+```
+Pada fungsi main , untuk kasus kedua dimana argumen kedua yang diketikkan pada terminal adalah * untuk memindahkan semua file dalam 1 level saja. Pada while, disitu ia akan melakukan pengecekan apakah sebuah direktori merupakan direktori berlevel atau tidak. Jika ya, maka akan continue. Kemudian untuk dalam if(folder->d_type==8) dilakukan pengecekan jika return nya bernilai 8, maka merupakan folder tsb isinya adalah regular file, dan akan dilakukan pemindahan file-filenya kemudian dibuatkan folder sesuai ekstensinya. 
+
+```c
+else if (strcmp(argv[1],"-d") == 0 && argc == 3) {
+        i = 0;
+        DIR *fd, *fdo;
+        struct dirent *folder;
+        char pl1[100],pl2[100];
+
+        fd = opendir(argv[2]);
+        int isdir = 0;
+
+        if(fd == NULL)
+        {
+            printf("error\n");
+        }
+        while( (folder=readdir(fd)) )
+        {
+            if ( !strcmp(folder->d_name, ".") || !strcmp(folder->d_name, "..") )
+            continue;
+
+            int p;
+            strcpy(pl1,argv[2]);
+            strcat(pl1,"/");
+            strcat(pl1,folder->d_name);
+            //is regular file
+            if(folder->d_type == 8){
+            pthread_create(&(threads[i]),NULL,move,pl1);
+            pthread_join(threads[i],NULL);
+            i++;
+            }
+        }
+    }
+```
+
+Prosesnya sama seperti case 2, tetapi disini akan memindahkan seluruh file yang ada dalam suatu path ke working directory. Makan yang di cek adalah argv[2] pada opendir karena disitu berisi nama path yang diketikkan pada terminal.
+
 ## Soal 4
 
 Norland adalah seorang penjelajah terkenal. Pada suatu malam Norland menyusuri jalan setapak menuju ke sebuah gua dan mendapati tiga pilar yang pada setiap pilarnya ada sebuah batu berkilau yang tertancap. Batu itu berkilau di kegelapan dan setiap batunya memiliki warna yang berbeda. Norland mendapati ada sebuah teka-teki yang tertulis di setiap pilar. Untuk dapat mengambil batu mulia di suatu pilar, Ia harus memecahkan teka-teki yang ada di pilar tersebut. Norland menghampiri setiap pilar secara bergantian.
